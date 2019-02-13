@@ -37,7 +37,7 @@ async def hi(event):
 
 @client.on(events.NewMessage(pattern=re.compile(r"Bye", re.IGNORECASE)))
 async def bye(event):
-    greetings = ["Bye.", "oh wow!", "FINE", "Good Bye", "Love You"]
+    greetings = ["Bye.", "oh wow!", "FINE", "Goodbye", "Love You"]
     await event.respond(random.choice(greetings))
 
 
