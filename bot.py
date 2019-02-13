@@ -21,7 +21,7 @@ async def hi(event):
 
  @client.on(events.NewMessage(pattern=re.compile(r"hi", re.IGNORECASE)))
 async def bye(event):
-    greetings = ["bye.", "oh wow!", "FINE", "Good Bye", "Love You"]
+    greetings = ["Bye.", "oh wow!", "FINE", "Good Bye", "Love You"]
     await event.respond(random.choice(greetings))
 
 client.run_until_disconnected()
