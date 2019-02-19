@@ -6,6 +6,8 @@ import random
 import time
 import requests
 
+from neighborhoods import NEIGHBORHOODS
+
 API_ID = 771357
 API_HASH = "696dba4ddacd457a72fc8317b9f01866"
 
@@ -52,5 +54,9 @@ async def bye(event):
     greetings = ["Bye.", "oh wow!", "FINE", "Goodbye", "Love You"]
     await event.respond(random.choice(greetings))
 
+
+@client.on(events.NewMessage(pattern=re.compile(r"hood", re.IGNORECASE)))
+async def hood(event):
+    await event.respond(random.choice(NEIGHBORHOODS))
 
 client.run_until_disconnected()
