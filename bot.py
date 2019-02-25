@@ -8,7 +8,7 @@ import requests
 
 from neighborhoods import NEIGHBORHOODS
 
-API_ID = 771357
+API_ID = 771_357
 API_HASH = "696dba4ddacd457a72fc8317b9f01866"
 
 # thecatapi.com
