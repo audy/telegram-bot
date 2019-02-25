@@ -8,7 +8,7 @@ import requests
 
 from neighborhoods import NEIGHBORHOODS
 
-API_ID = 771357
+API_ID = 771_357
 API_HASH = "696dba4ddacd457a72fc8317b9f01866"
 
 # thecatapi.com
@@ -16,6 +16,24 @@ CAT_API_KEY = "9f053a85-ef38-470b-914e-d1c3bffafd65"
 
 
 client = TelegramClient("session", API_ID, API_HASH).start(phone="+1 352 200 2839")
+
+
+def get_weather_summary():
+    resp = requests.get(
+        "https://api.darksky.net/forecast/d3e344b04f2da052a8b96431bf58131d/37.8267,-122.4233"
+    )
+
+    weather_data = resp.json()
+
+    weather_summary = f"""
+Currently: {weather_data['minutely']['summary']}
+(Wind={weather_data['currently']['windSpeed']}-mph; Temp={weather_data['currently']['temperature']}-F Humidity={100*weather_data['currently']['humidity']}%)
+
+Today: {weather_data['hourly']['summary']}
+Forecast: {weather_data['daily']['summary']}
+"""
+
+    return weather_summary
 
 
 def get_random_joke():
@@ -58,5 +76,12 @@ async def bye(event):
 @client.on(events.NewMessage(pattern=re.compile(r"hood", re.IGNORECASE)))
 async def hood(event):
     await event.respond(random.choice(NEIGHBORHOODS))
+
+
+@client.on(events.NewMessage(pattern=re.compile(r"weather", re.IGNORECASE)))
+async def weather(event):
+    weather_summary = get_weather_summary()
+    await event.respond(weather_summary)
+
 
 client.run_until_disconnected()
