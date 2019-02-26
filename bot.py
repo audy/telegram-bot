@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 
+from icalevents import icalevents as ical
+
 from telethon import TelegramClient, sync, events
-import re
-import random
-import time
 import requests
 
 from neighborhoods import NEIGHBORHOODS
+
+import re
+import random
+import time
+import datetime
+
 
 API_ID = 771_357
 API_HASH = "696dba4ddacd457a72fc8317b9f01866"
@@ -16,6 +21,23 @@ CAT_API_KEY = "9f053a85-ef38-470b-914e-d1c3bffafd65"
 
 
 client = TelegramClient("session", API_ID, API_HASH).start(phone="+1 352 200 2839")
+
+
+def get_gym_events():
+    GYM_URL = "http://touchstoneclimbing.time.ly/?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events&no_html=true&ai1ec_tag_ids=31&&"
+    events = ical.events(
+        GYM_URL,
+        start=datetime.date.today(),
+        end=datetime.date.today() + datetime.timedelta(days=1),
+    )
+
+    event_message = []
+
+    for event in events:
+        start = event.start.strftime("%a (%d/%-m) %I:%M %p")
+        end = event.end.strftime("%I:%M %p")
+        event_message.append(f"* {start} - {end}: {event.summary}")
+    return "\n".join(event_message)
 
 
 def get_weather_summary():
@@ -82,6 +104,11 @@ async def hood(event):
 async def weather(event):
     weather_summary = get_weather_summary()
     await event.respond(weather_summary)
+
+
+@client.on(events.NewMessage(pattern=re.compile(r"gym", re.IGNORECASE)))
+async def gym(event):
+    await event.respond(get_gym_events())
 
 
 client.run_until_disconnected()
