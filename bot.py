@@ -44,8 +44,6 @@ def weather(update, context):
         "https://api.darksky.net/forecast/d3e344b04f2da052a8b96431bf58131d/37.8267,-122.4233"
     )
 
-    print(resp)
-
     weather_data = resp.json()
 
     weather_summary = f"""
@@ -61,7 +59,7 @@ Forecast: {weather_data['daily']['summary']}
 commands = {"cat": cat, "hood": hood, "hoke": joke, "weather": weather}
 
 for command_name, command_function in commands.items():
-    updater.dispatcher.add_handler(CommandHandler("command_name", command_function))
+    updater.dispatcher.add_handler(CommandHandler(command_name, command_function))
 
 print("listening")
 updater.start_polling()
