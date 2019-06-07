@@ -1,3 +1,2 @@
-telethon
 requests
-icalevents
+python-telegram-bot 
