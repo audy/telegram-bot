@@ -119,5 +119,3 @@ NEIGHBORHOODS = [
     "Westwood Park",
     "Yerba Buena",
 ]
-
-
