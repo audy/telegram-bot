@@ -1,2 +1,2 @@
-telethon
 requests
+python-telegram-bot 
