@@ -56,7 +56,7 @@ Forecast: {weather_data['daily']['summary']}
     context.bot.send_message(chat_id=update.message.chat_id, text=weather_summary)
 
 
-commands = {"cat": cat, "hood": hood, "hoke": joke, "weather": weather}
+commands = {"cat": cat, "hood": hood, "joke": joke, "weather": weather}
 
 for command_name, command_function in commands.items():
     updater.dispatcher.add_handler(CommandHandler(command_name, command_function))
