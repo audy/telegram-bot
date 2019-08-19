@@ -17,6 +17,12 @@ updater = Updater(
 )
 
 
+def start(update, context):
+    """ default /start reply """
+    text = """ try /cat /hood /joke /weather """
+    context.bot.send_message(chat_id=update.message.chat_id, text=text)
+
+
 def cat(update, context):
     """ a random cat photo """
     resp = requests.get("https://api.thecatapi.com/v1/images/search?size=full")
@@ -56,7 +62,7 @@ Forecast: {weather_data['daily']['summary']}
     context.bot.send_message(chat_id=update.message.chat_id, text=weather_summary)
 
 
-commands = {"cat": cat, "hood": hood, "joke": joke, "weather": weather}
+commands = {"cat": cat, "hood": hood, "joke": joke, "weather": weather, "start": start, "help": start}
 
 for command_name, command_function in commands.items():
     updater.dispatcher.add_handler(CommandHandler(command_name, command_function))
