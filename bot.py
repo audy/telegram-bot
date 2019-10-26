@@ -22,27 +22,10 @@ updater = Updater(
 )
 
 
-def bored():
-    first_neighborhood = random.choice(NEIGHBORHOODS)
-
-    restaurants = yelp.search_query(
-        location=neighborhood, limit=10, open_now=True, categories="restaurants"
-    )
-
-    restaurant = random.sample(restaurants["businesses"], 1)[0]
-
-    second_neighborhood = random.choice(NEIGHBORHOODS)
-
-    bars = yelp.search_query(
-        location=neighborhood, limit=10, open_now=True, categories="bars"
-    )
-
-    message = (
-        f"First, take a trip to {first_neighborhood} and get a bite to eat at {restaurant['name']} {(', '.join(c['title'] for c in restaurant['categories']))}"
-        f"Then, head to {second_neighborhood} and get a drink at {bar}"
-    )
-
-    context.bot.send_message(chat_id=update.message.chat_id, text=message)
+def start(update, context):
+    """ default /start reply """
+    text = """ try /cat /hood /joke /weather """
+    context.bot.send_message(chat_id=update.message.chat_id, text=text)
 
 
 def cat(update, context):
@@ -159,11 +142,13 @@ def bored(update, context):
 
 
 commands = {
+    "bored": bored,
     "cat": cat,
+    "help": start,
     "hood": hood,
     "joke": joke,
+    "start": start,
     "weather": weather,
-    "bored": bored,
 }
 
 for command_name, command_function in commands.items():
