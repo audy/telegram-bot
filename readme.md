@@ -7,7 +7,8 @@ Contributors:
 * [@audy](https://github.com/audy)
 * [@toomanypockets](https://github.com/toomanypockets)
 
-## Usage
+## Usage/Deployment
 
-1. Get some API keys
-2. `docker build --tag telegram-bot . && docker run --detach --restart=always --name telegram-bot telegram-bot`
+This repository will automatically deploy to production if you push/merge to
+the `master` branch. To add/modify the bot, [submit a pull
+request](https://github.com/audy/telegram-bot/pull/new/master).
