@@ -89,6 +89,8 @@ def rona_bored(update, context):
         ]
     )
 
+    context.bot.send_message(chat_id=update.message.chat_id, text=message)
+
 
 def _humanized_list(items):
     if len(items) == 1:
