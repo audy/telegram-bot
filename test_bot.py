@@ -13,3 +13,5 @@ def keys():
 
 def test_keys(keys):
     assert Keys.get_yelp() == "yelp-api-key"
+    assert Keys.get_telegram() == "telegram-api-key"
+    assert Keys.get_darksky() == "darksky-api-key"
