@@ -19,15 +19,6 @@ class Keys:
     DARKSKY = os.getenv("DARKSKY_API_KEY")
 
 
-yelp = YelpAPI(Keys.YELP)
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
-
-updater = Updater(token=Keys.TELEGRAM, use_context=True)
-
-
 def start(update, context):
     """ default /start reply """
     text = """ try /cat /hood /joke /weather """
@@ -70,6 +61,7 @@ Forecast: {weather_data['daily']['summary']}
 
 
 def rona_bored(update, context):
+    """ replacement for /bored during social-distancing """
     eat_action = random.choice(
         ["grab a bite", "have a snack", "get some grub", "enjoy the nice food"]
     )
@@ -92,6 +84,7 @@ def rona_bored(update, context):
 
 
 def _humanized_list(items):
+    """convert a list of items into something that could go into an English sentence"""
     if len(items) == 1:
         return items[0]
     else:
@@ -113,6 +106,7 @@ def _get_movement_action():
 
 
 def delivery(update, context):
+    """ random food delivery. Useful for #TakeoutTuesday """
     first_neighborhood = random.choice(NEIGHBORHOODS)
 
     # I guess every restaurant that is open now probably delivers :shrug:
@@ -155,6 +149,7 @@ def delivery(update, context):
 
 
 def bored(update, context):
+    """ Suggest something to do on a Saturday """
     first_neighborhood = random.choice(NEIGHBORHOODS)
 
     restaurant = random.choice(
@@ -192,19 +187,32 @@ def bored(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
-commands = {
-    "bored": rona_bored,
-    "cat": cat,
-    "help": start,
-    "hood": hood,
-    "joke": joke,
-    "start": start,
-    "weather": weather,
-    "delivery": delivery,
-}
+def main():
+    yelp = YelpAPI(Keys.YELP)
 
-for command_name, command_function in commands.items():
-    updater.dispatcher.add_handler(CommandHandler(command_name, command_function))
+    logging.basicConfig(
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+    )
 
-print("listening")
-updater.start_polling()
+    updater = Updater(token=Keys.TELEGRAM, use_context=True)
+
+    commands = {
+        "bored": rona_bored,
+        "cat": cat,
+        "help": start,
+        "hood": hood,
+        "joke": joke,
+        "start": start,
+        "weather": weather,
+        "delivery": delivery,
+    }
+
+    for command_name, command_function in commands.items():
+        updater.dispatcher.add_handler(CommandHandler(command_name, command_function))
+
+    print("listening")
+    updater.start_polling()
+
+
+if __name__ == "__main__":
+    main()
