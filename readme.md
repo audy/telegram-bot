@@ -15,3 +15,7 @@ Contributors:
 This repository will automatically deploy to production if you push/merge to
 the `master` branch. To fix/modify the bot, [submit a pull
 request](https://github.com/audy/telegram-bot/pull/new/master).
+
+## Testing
+
+`pytest -vv`
