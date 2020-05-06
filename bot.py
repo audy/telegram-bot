@@ -70,7 +70,6 @@ Forecast: {weather_data['daily']['summary']}
 
 
 def rona_bored(update, context):
-
     eat_action = random.choice(
         ["grab a bite", "have a snack", "get some grub", "enjoy the nice food"]
     )
