@@ -1,4 +1,7 @@
-# telegram bot
+# Telegram Bot
+[![test](https://github.com/audy/telegram-bot/workflows/tests/badge.svg)](https://github.com/audy/telegram-bot/actions)
+[![deploy](https://github.com/audy/telegram-bot/workflows/deploy/badge.svg)](https://github.com/audy/telegram-bot/actions)
+
 
 I'm a bot! on Telegram!
 
