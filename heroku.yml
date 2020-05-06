@@ -2,4 +2,7 @@ build:
   docker:
     bot: Dockerfile
 run:
-  bot: ./bot.py
+  bot:
+    command:
+      - ./bot.py
+    image: bot
