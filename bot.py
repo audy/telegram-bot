@@ -144,8 +144,6 @@ def delivery(update, context):
 
     restaurant_categories = [category["title"] for category in restaurant["categories"]]
 
-    pprint(restaurant)
-
     message = " ".join(
         [
             action,
