@@ -3,7 +3,6 @@
 import logging
 import os
 import random
-from dataclasses import dataclass
 
 import requests
 from telegram.ext import CommandHandler, Updater
@@ -12,11 +11,18 @@ from yelpapi import YelpAPI
 from neighborhoods import NEIGHBORHOODS
 
 
-@dataclass
 class Keys:
-    YELP = os.getenv("YELP_API_KEY")
-    TELEGRAM = os.getenv("TELEGRAM_API_KEY")
-    DARKSKY = os.getenv("DARKSKY_API_KEY")
+    @classmethod
+    def get_yelp(_):
+        return os.environ["YELP_API_KEY"]
+
+    @classmethod
+    def get_telegram(_):
+        return os.environ["TELEGRAM_API_KEY"]
+
+    @classmethod
+    def get_darksky(_):
+        return os.environ["DARKSKY_API_KEY"]
 
 
 def start(update, context):
@@ -46,7 +52,7 @@ def joke(update, context):
 
 
 def weather(update, context):
-    resp = requests.get(f"https://api.darksky.net/forecast/{Keys.DARKSKY}/37.8267,-122.4233")
+    resp = requests.get(f"https://api.darksky.net/forecast/{Keys.get_darksky()}/37.8267,-122.4233")
 
     weather_data = resp.json()
 
@@ -188,13 +194,13 @@ def bored(update, context):
 
 
 def main():
-    yelp = YelpAPI(Keys.YELP)
+    yelp = YelpAPI(Keys.get_yelp())
 
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
     )
 
-    updater = Updater(token=Keys.TELEGRAM, use_context=True)
+    updater = Updater(token=Keys.get_telegram(), use_context=True)
 
     commands = {
         "bored": rona_bored,
