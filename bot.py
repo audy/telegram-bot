@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
-from telegram.ext import Updater, CommandHandler
-
-from neighborhoods import NEIGHBORHOODS
-
-import random
-import requests
 import logging
 import os
+import random
+from dataclasses import dataclass
+
+import requests
+from telegram.ext import CommandHandler, Updater
 from yelpapi import YelpAPI
+
+from neighborhoods import NEIGHBORHOODS
 
 
 @dataclass
