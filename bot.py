@@ -21,8 +21,7 @@ class Keys:
 yelp = YelpAPI(Keys.YELP)
 
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 
 updater = Updater(token=Keys.TELEGRAM, use_context=True)
