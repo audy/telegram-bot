@@ -65,8 +65,7 @@ Today: {weather_data['hourly']['summary']}
 Forecast: {weather_data['daily']['summary']}
 """
 
-    context.bot.send_message(
-        chat_id=update.message.chat_id, text=weather_summary
+    context.bot.send_message(chat_id=update.message.chat_id, text=weather_summary)
 
 
 def rona_bored(update, context):
@@ -113,31 +112,67 @@ def _get_movement_action():
     )
 
 
+def delivery(update, context):
+    first_neighborhood = random.choice(NEIGHBORHOODS)
+
+    # I guess every restaurant that is open now probably delivers :shrug:
+    restaurant = random.choice(
+        yelp.search_query(
+            location=first_neighborhood, limit=10, open_now=True, categories="restaurants"
+        )["businesses"]
+    )
+
+    action = random.choice(
+        [
+            "crack open a cold one",
+            "turn on netflix",
+            "take a bath",
+            "do some social distancing",
+            "work on yours crafts project",
+            "zoom your relatives",
+            "zoom your friends",
+            "zoom your Grindr match",
+            "zoom your Hinge match",
+            "read a book",
+            "stare at the ceiling",
+            "give yourself a haircut",
+            "do some exercise",
+            "stare out the window",
+        ]
+    )
+
+    restaurant_categories = [category["title"] for category in restaurant["categories"]]
+
+    pprint(restaurant)
+
+    message = " ".join(
+        [
+            action,
+            f"and order delivery from {restaurant['name']} ({_humanized_list(restaurant_categories)})",
+            restaurant["url"].split("?")[0],
+        ]
+    )
+
+    context.bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
 def bored(update, context):
     first_neighborhood = random.choice(NEIGHBORHOODS)
 
     restaurant = random.choice(
         yelp.search_query(
-            location=first_neighborhood,
-            limit=10,
-            open_now=True,
-            categories="restaurants",
+            location=first_neighborhood, limit=10, open_now=True, categories="restaurants"
         )["businesses"]
     )
 
-    restaurant_categories = [
-        category["title"] for category in restaurant["categories"]
-    ]
+    restaurant_categories = [category["title"] for category in restaurant["categories"]]
 
     second_neighborhood = random.choice(NEIGHBORHOODS)
 
     bar = random.choice(
-        yelp.search_query(
-            location=second_neighborhood,
-            limit=10,
-            open_now=True,
-            categories="bars",
-        )["businesses"]
+        yelp.search_query(location=second_neighborhood, limit=10, open_now=True, categories="bars")[
+            "businesses"
+        ]
     )
 
     eat_action = random.choice(
@@ -145,12 +180,7 @@ def bored(update, context):
     )
 
     drink_action = random.choice(
-        [
-            "grab a drink",
-            "smash a few whiteclaws",
-            "have a cold one",
-            "take it easy",
-        ]
+        ["grab a drink", "smash a few whiteclaws", "have a cold one", "take it easy"]
     )
 
     message = " ".join(
@@ -172,6 +202,7 @@ commands = {
     "joke": joke,
     "start": start,
     "weather": weather,
+    "delivery": delivery,
 }
 
 for command_name, command_function in commands.items():
