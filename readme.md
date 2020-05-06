@@ -4,8 +4,8 @@ It's a bot!
 
 Contributors:
 
-* @audy
-* @toomanypockets
+* [@audy](https://github.com/audy)
+* [@toomanypockets](https://github.com/toomanypockets)
 
 ## Usage
 
