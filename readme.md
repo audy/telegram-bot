@@ -5,7 +5,7 @@
 
 I'm a bot! on Telegram!
 
-Contributors:
+## Contributors
 
 * [@audy](https://github.com/audy)
 * [@toomanypockets](https://github.com/toomanypockets)
