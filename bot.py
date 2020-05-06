@@ -206,9 +206,7 @@ commands = {
 }
 
 for command_name, command_function in commands.items():
-    updater.dispatcher.add_handler(
-        CommandHandler(command_name, command_function)
-    )
+    updater.dispatcher.add_handler(CommandHandler(command_name, command_function))
 
 print("listening")
 updater.start_polling()
