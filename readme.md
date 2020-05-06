@@ -1,6 +1,6 @@
 # telegram bot
 
-It's a bot!
+I'm a bot! on Telegram!
 
 Contributors:
 
