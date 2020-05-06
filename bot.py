@@ -7,19 +7,25 @@ from neighborhoods import NEIGHBORHOODS
 import random
 import requests
 import logging
+import os
 from yelpapi import YelpAPI
 
-YELP_API_KEY = "q1CJG9aPlwTzWx_l-O6eEJ_YE9Dnz4Ej1Y8iN3BT5xxsa_qetRrxqhNQxDLVjcE_R6V-oSWFRoRk_C-u8HZxxmq1ZeXISygpgo2I-e675dn-cymOrRmjforBp5KzXXYx"
-yelp = YelpAPI(YELP_API_KEY)
+
+@dataclass
+class Keys:
+    YELP = os.getenv("YELP_API_KEY")
+    TELEGRAM = os.getenv("TELEGRAM_API_KEY")
+    DARKSKY = os.getenv("DARKSKY_API_KEY")
+
+
+yelp = YelpAPI(Keys.YELP)
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
 )
 
-updater = Updater(
-    token="636614158:AAEDn80O9QQyOq5PW1a8lk1Yb2SUhBlny2I", use_context=True
-)
+updater = Updater(token=Keys.TELEGRAM, use_context=True)
 
 
 def start(update, context):
@@ -43,17 +49,13 @@ def hood(update, context):
 
 def joke(update, context):
     """ tell a joke """
-    resp = requests.get(
-        "https://icanhazdadjoke.com/", headers={"Accept": "application/json"}
-    )
+    resp = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
     joke = resp.json()["joke"]
     context.bot.send_message(chat_id=update.message.chat_id, text=joke)
 
 
 def weather(update, context):
-    resp = requests.get(
-        "https://api.darksky.net/forecast/d3e344b04f2da052a8b96431bf58131d/37.8267,-122.4233"
-    )
+    resp = requests.get(f"https://api.darksky.net/forecast/{Keys.DARKSKY}/37.8267,-122.4233")
 
     weather_data = resp.json()
 
