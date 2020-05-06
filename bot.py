@@ -67,6 +67,26 @@ Forecast: {weather_data['daily']['summary']}
 
     context.bot.send_message(
         chat_id=update.message.chat_id, text=weather_summary
+
+
+def rona_bored(update, context):
+
+    eat_action = random.choice(
+        ["grab a bite", "have a snack", "get some grub", "enjoy the nice food"]
+    )
+
+    rooms = ["living room", "bedroom", "office", "closet", "garage", "bathroom", "kitchen"]
+
+    drink_action = random.choice(
+        ["grab a drink", "smash a few whiteclaws", "have a cold one", "take it easy"]
+    )
+
+    message = " ".join(
+        [
+            f"First, {_get_movement_action()} {random.choice(rooms)} and",
+            f"{eat_action} at {random.choice(rooms)} (kitchen).",
+            f"Then, {_get_movement_action()} {random.choice(rooms)} and {drink_action} at {random.choice(rooms)}.",
+        ]
     )
 
 
@@ -143,7 +163,7 @@ def bored(update, context):
 
 
 commands = {
-    "bored": bored,
+    "bored": rona_bored,
     "cat": cat,
     "help": start,
     "hood": hood,
