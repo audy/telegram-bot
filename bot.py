@@ -10,8 +10,6 @@ from yelpapi import YelpAPI
 
 from neighborhoods import NEIGHBORHOODS
 
-YELP = YelpAPI(Keys.get_yelp())
-
 
 class Keys:
     @classmethod
@@ -25,6 +23,9 @@ class Keys:
     @classmethod
     def get_darksky(_):
         return os.environ["DARKSKY_API_KEY"]
+
+
+YELP = YelpAPI(Keys.get_yelp())
 
 
 def start(update, context):
