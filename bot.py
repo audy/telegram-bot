@@ -10,6 +10,8 @@ from yelpapi import YelpAPI
 
 from neighborhoods import NEIGHBORHOODS
 
+YELP = YelpAPI(Keys.get_yelp())
+
 
 class Keys:
     @classmethod
@@ -117,7 +119,7 @@ def delivery(update, context):
 
     # I guess every restaurant that is open now probably delivers :shrug:
     restaurant = random.choice(
-        yelp.search_query(
+        YELP.search_query(
             location=first_neighborhood, limit=10, open_now=True, categories="restaurants"
         )["businesses"]
     )
@@ -159,7 +161,7 @@ def bored(update, context):
     first_neighborhood = random.choice(NEIGHBORHOODS)
 
     restaurant = random.choice(
-        yelp.search_query(
+        YELP.search_query(
             location=first_neighborhood, limit=10, open_now=True, categories="restaurants"
         )["businesses"]
     )
@@ -169,7 +171,7 @@ def bored(update, context):
     second_neighborhood = random.choice(NEIGHBORHOODS)
 
     bar = random.choice(
-        yelp.search_query(location=second_neighborhood, limit=10, open_now=True, categories="bars")[
+        YELP.search_query(location=second_neighborhood, limit=10, open_now=True, categories="bars")[
             "businesses"
         ]
     )
@@ -194,7 +196,6 @@ def bored(update, context):
 
 
 def main():
-    yelp = YelpAPI(Keys.get_yelp())
 
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
