@@ -129,7 +129,7 @@ def delivery(update, context):
         [
             "crack open a cold one",
             "turn on netflix",
-            "take a bath",
+            "take a bath with a friend",
             "do some social distancing",
             "work on yours crafts project",
             "zoom your relatives",
@@ -141,6 +141,8 @@ def delivery(update, context):
             "give yourself a haircut",
             "do some exercise",
             "stare out the window",
+            "earn some fortnite frags",
+            "study some speedruns",
         ]
     )
 
