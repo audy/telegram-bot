@@ -198,11 +198,9 @@ def bored(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
-
-def dogfact():
+def dogfact(update, context):
     message = requests.get("http://dog-api.kinduff.com/api/facts").json()["facts"][0]
     context.bot.send_message(chat_id=update.message.chat_id, text=message)
-
 
 
 def catfact(update, context):
@@ -211,7 +209,6 @@ def catfact(update, context):
     """
     message = requests.get("https://catfact.ninja/fact").json()["fact"]
     context.bot.send_message(chat_id=update.message.chat_id, text=message)
-
 
 
 def main():
