@@ -198,8 +198,15 @@ def bored(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
-def main():
+def catfact(update, context):
+    """
+    Get a random cat fact from catfact.jinja
+    """
+    message = requests.get("https://catfact.ninja/fact").json()["fact"]
+    context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
+
+def main():
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
     )
@@ -215,6 +222,7 @@ def main():
         "start": start,
         "weather": weather,
         "delivery": delivery,
+        "catfact": catfact,
     }
 
     for command_name, command_function in commands.items():
