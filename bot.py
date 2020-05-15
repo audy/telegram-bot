@@ -30,7 +30,7 @@ YELP = YelpAPI(Keys.get_yelp())
 
 def start(update, context):
     """ default /start reply """
-    text = """ try /cat /hood /joke /weather """
+    text = """ try /cat /hood /joke /weather /delivery /bored /catfact /dogfact """
     context.bot.send_message(chat_id=update.message.chat_id, text=text)
 
 
@@ -198,12 +198,20 @@ def bored(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
+
+def dogfact():
+    message = requests.get("http://dog-api.kinduff.com/api/facts").json()["facts"][0]
+    context.bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
+
 def catfact(update, context):
     """
     Get a random cat fact from catfact.jinja
     """
     message = requests.get("https://catfact.ninja/fact").json()["fact"]
     context.bot.send_message(chat_id=update.message.chat_id, text=message)
+
 
 
 def main():
@@ -222,6 +230,7 @@ def main():
         "start": start,
         "weather": weather,
         "delivery": delivery,
+        "dogfact": dogfact,
         "catfact": catfact,
     }
 
