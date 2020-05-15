@@ -30,7 +30,7 @@ YELP = YelpAPI(Keys.get_yelp())
 
 def start(update, context):
     """ default /start reply """
-    text = """ try /cat /hood /joke /weather /delivery /bored /catfact /dogfact """
+    text = """ try /cat /hood /joke /weather /delivery /bored /catfact /dogfact /trivia """
     context.bot.send_message(chat_id=update.message.chat_id, text=text)
 
 
@@ -211,6 +211,13 @@ def catfact(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
+def trivia(update, context):
+    trivia = requests.get("https://opentdb.com/api.php?amount=1").json()
+    result = trivia["results"][0]
+    message = result["question"]
+    context.bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
 def main():
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -229,6 +236,7 @@ def main():
         "delivery": delivery,
         "dogfact": dogfact,
         "catfact": catfact,
+        "trivia": trivia,
     }
 
     for command_name, command_function in commands.items():
