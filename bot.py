@@ -198,6 +198,11 @@ def bored(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
+def dogfact():
+    message = requests.get("http://dog-api.kinduff.com/api/facts").json()["facts"][0]
+    context.bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
 def main():
 
     logging.basicConfig(
@@ -215,6 +220,7 @@ def main():
         "start": start,
         "weather": weather,
         "delivery": delivery,
+        "dogfact": dogfact,
     }
 
     for command_name, command_function in commands.items():
