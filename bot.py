@@ -10,6 +10,8 @@ from yelpapi import YelpAPI
 
 from neighborhoods import NEIGHBORHOODS
 
+import helpers
+
 
 class Keys:
     @classmethod
@@ -83,35 +85,13 @@ def rona_bored(update, context):
 
     message = " ".join(
         [
-            f"First, {_get_movement_action()} {random.choice(rooms)} and",
+            f"First, {helpers.get_movement_action()} {random.choice(rooms)} and",
             f"{eat_action} at {random.choice(rooms)} (kitchen).",
-            f"Then, {_get_movement_action()} {random.choice(rooms)} and {drink_action} at {random.choice(rooms)}.",
+            f"Then, {helpers.get_movement_action()} {random.choice(rooms)} and {drink_action} at {random.choice(rooms)}.",
         ]
     )
 
     context.bot.send_message(chat_id=update.message.chat_id, text=message)
-
-
-def _humanized_list(items):
-    """convert a list of items into something that could go into an English sentence"""
-    if len(items) == 1:
-        return items[0]
-    else:
-        return ", ".join(items[:1]) + f" & {items[-1]}"
-
-
-def _get_movement_action():
-    return random.choice(
-        [
-            "take a trip to",
-            "head on over to",
-            "walk on down to",
-            "make a quick jaunt to",
-            "find yourself in",
-            "ride the bus to",
-            "have a nice bike ride over to",
-        ]
-    )
 
 
 def delivery(update, context):
@@ -151,7 +131,7 @@ def delivery(update, context):
     message = " ".join(
         [
             action,
-            f"and order delivery from {restaurant['name']} ({_humanized_list(restaurant_categories)})",
+            f"and order delivery from {restaurant['name']} ({helpers.humanized_list(restaurant_categories)})",
             restaurant["url"].split("?")[0],
         ]
     )
@@ -189,9 +169,9 @@ def bored(update, context):
 
     message = " ".join(
         [
-            f"First, {_get_movement_action()} {first_neighborhood} and",
-            f"{eat_action} at {restaurant['name']} ({_humanized_list(restaurant_categories)}).",
-            f"Then, {_get_movement_action()} {second_neighborhood} and {drink_action} at {bar['name']}.",
+            f"First, {helpers.get_movement_action()} {first_neighborhood} and",
+            f"{eat_action} at {restaurant['name']} ({helpers.humanized_list(restaurant_categories)}).",
+            f"Then, {helpers.get_movement_action()} {second_neighborhood} and {drink_action} at {bar['name']}.",
         ]
     )
 
