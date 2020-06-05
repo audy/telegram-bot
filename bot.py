@@ -14,13 +14,11 @@ import helpers
 
 
 class Keys:
+    """ keys for various external services """
+
     @classmethod
     def get_yelp(_):
         return os.environ["YELP_API_KEY"]
-
-    @classmethod
-    def get_telegram(_):
-        return os.environ["TELEGRAM_API_KEY"]
 
     @classmethod
     def get_darksky(_):
@@ -30,48 +28,84 @@ class Keys:
 YELP = YelpAPI(Keys.get_yelp())
 
 
-def start(update, context):
-    """ default /start reply """
-    text = """ try /cat /hood /joke /weather /delivery /bored /catfact /dogfact /trivia """
-    context.bot.send_message(chat_id=update.message.chat_id, text=text)
+class Bot:
+    def __init__(self):
+        self.telegram_api_key = os.environ["TELEGRAM_API_KEY"]
+        self.updater = Updater(token=self.telegram_api_key, use_context=True)
+
+        # trigger -> handler function
+        self.handlers = {}
+
+    def start(self):
+        self._register_handlers()
+        self.updater.start_polling()
+
+    def help(self):
+        """ auto-generated handler for /help """
+        return " ".join([f"/{k}" for k in self.handlers.keys()])
+
+    def _register_handlers(self):
+        self.responds_to("help")(self.help)
+
+        for command_name, command_function in self.handlers.items():
+            print(f"registered: {command_name} {command_function}")
+            self.updater.dispatcher.add_handler(
+                CommandHandler(command_name, self._handler_wrapper(command_function))
+            )
+
+    def _handler_wrapper(self, handler_function):
+        return lambda update, context: context.bot.send_message(
+            chat_id=update.message.chat_id, text=handler_function()
+        )
+
+    def responds_to(self, trigger):
+        def wrapper(handler):
+            assert trigger not in self.handlers, f"duplicated trigger! {trigger} -> {handler}"
+            self.handlers[trigger] = handler
+            return handler
+
+        return wrapper
 
 
-def cat(update, context):
+bot = Bot()
+
+
+@bot.responds_to("cat")
+def cat():
     """ a random cat photo """
     resp = requests.get("https://api.thecatapi.com/v1/images/search?size=full")
-    cat_url = resp.json()[0]["url"]
-    context.bot.send_message(chat_id=update.message.chat_id, text=cat_url)
+    return resp.json()[0]["url"]
 
 
-def hood(update, context):
+@bot.responds_to("hood")
+def hood():
     """ a random neighborhood in SF """
-    neighborhood = random.choice(NEIGHBORHOODS)
-    context.bot.send_message(chat_id=update.message.chat_id, text=neighborhood)
+    return random.choice(NEIGHBORHOODS)
 
 
-def joke(update, context):
+@bot.responds_to("joke")
+def joke():
     """ tell a joke """
     resp = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
-    joke = resp.json()["joke"]
-    context.bot.send_message(chat_id=update.message.chat_id, text=joke)
+    return resp.json()["joke"]
 
 
-def weather(update, context):
+@bot.responds_to("weather")
+def weather():
     resp = requests.get(f"https://api.darksky.net/forecast/{Keys.get_darksky()}/37.8267,-122.4233")
 
     weather_data = resp.json()
-
-    weather_summary = f"""
+    # TODO: left pad
+    return f"""
 Currently: {weather_data['minutely']['summary']}
 (Wind={weather_data['currently']['windSpeed']}-mph; Temp={weather_data['currently']['temperature']}-F Humidity={100*weather_data['currently']['humidity']}%)
 Today: {weather_data['hourly']['summary']}
 Forecast: {weather_data['daily']['summary']}
 """
 
-    context.bot.send_message(chat_id=update.message.chat_id, text=weather_summary)
 
-
-def rona_bored(update, context):
+@bot.responds_to("bored")
+def rona_bored():
     """ replacement for /bored during social-distancing """
     eat_action = random.choice(
         ["grab a bite", "have a snack", "get some grub", "enjoy the nice food"]
@@ -83,7 +117,7 @@ def rona_bored(update, context):
         ["grab a drink", "smash a few whiteclaws", "have a cold one", "take it easy"]
     )
 
-    message = " ".join(
+    return " ".join(
         [
             f"First, {helpers.get_movement_action()} {random.choice(rooms)} and",
             f"{eat_action} at {random.choice(rooms)} (kitchen).",
@@ -91,10 +125,9 @@ def rona_bored(update, context):
         ]
     )
 
-    context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
-
-def delivery(update, context):
+@bot.responds_to("delivery")
+def delivery():
     """ random food delivery. Useful for #TakeoutTuesday """
     first_neighborhood = random.choice(NEIGHBORHOODS)
 
@@ -128,7 +161,7 @@ def delivery(update, context):
 
     restaurant_categories = [category["title"] for category in restaurant["categories"]]
 
-    message = " ".join(
+    return " ".join(
         [
             action,
             f"and order delivery from {restaurant['name']} ({helpers.humanized_list(restaurant_categories)})",
@@ -136,10 +169,9 @@ def delivery(update, context):
         ]
     )
 
-    context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
-
-def bored(update, context):
+@bot.responds_to("og_bored")
+def bored():
     """ Suggest something to do on a Saturday """
     first_neighborhood = random.choice(NEIGHBORHOODS)
 
@@ -167,7 +199,7 @@ def bored(update, context):
         ["grab a drink", "smash a few whiteclaws", "have a cold one", "take it easy"]
     )
 
-    message = " ".join(
+    return " ".join(
         [
             f"First, {helpers.get_movement_action()} {first_neighborhood} and",
             f"{eat_action} at {restaurant['name']} ({helpers.humanized_list(restaurant_categories)}).",
@@ -175,27 +207,25 @@ def bored(update, context):
         ]
     )
 
-    context.bot.send_message(chat_id=update.message.chat_id, text=message)
+
+@bot.responds_to("dogfact")
+def dogfact():
+    return requests.get("http://dog-api.kinduff.com/api/facts").json()["facts"][0]
 
 
-def dogfact(update, context):
-    message = requests.get("http://dog-api.kinduff.com/api/facts").json()["facts"][0]
-    context.bot.send_message(chat_id=update.message.chat_id, text=message)
-
-
-def catfact(update, context):
+@bot.responds_to("catfact")
+def catfact():
     """
     Get a random cat fact from catfact.jinja
     """
-    message = requests.get("https://catfact.ninja/fact").json()["fact"]
-    context.bot.send_message(chat_id=update.message.chat_id, text=message)
+    return requests.get("https://catfact.ninja/fact").json()["fact"]
 
 
-def trivia(update, context):
+@bot.responds_to("trivia")
+def trivia():
     trivia = requests.get("https://opentdb.com/api.php?amount=1").json()
     result = trivia["results"][0]
-    message = result["question"]
-    context.bot.send_message(chat_id=update.message.chat_id, text=message)
+    return result["question"]
 
 
 def main():
@@ -203,27 +233,8 @@ def main():
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
     )
 
-    updater = Updater(token=Keys.get_telegram(), use_context=True)
-
-    commands = {
-        "bored": rona_bored,
-        "cat": cat,
-        "help": start,
-        "hood": hood,
-        "joke": joke,
-        "start": start,
-        "weather": weather,
-        "delivery": delivery,
-        "dogfact": dogfact,
-        "catfact": catfact,
-        "trivia": trivia,
-    }
-
-    for command_name, command_function in commands.items():
-        updater.dispatcher.add_handler(CommandHandler(command_name, command_function))
-
-    print("listening")
-    updater.start_polling()
+    print("listening!")
+    bot.start()
 
 
 if __name__ == "__main__":
