@@ -208,6 +208,12 @@ def bored():
     )
 
 
+@bot.responds_to("hello")
+def hello():
+    """ returns a greeting """
+    return random.sample(["Hola", "Hallo", "Hello", "Salut"])
+
+
 @bot.responds_to("dogfact")
 def dogfact():
     return requests.get("http://dog-api.kinduff.com/api/facts").json()["facts"][0]
