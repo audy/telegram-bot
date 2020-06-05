@@ -211,7 +211,7 @@ def bored():
 @bot.responds_to("hello")
 def hello():
     """ returns a greeting """
-    return random.sample(["Hola", "Hallo", "Hello", "Salut"])
+    return random.choice(["Hola", "Hallo", "Hello", "Salut"])
 
 
 @bot.responds_to("dogfact")
