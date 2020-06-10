@@ -76,6 +76,11 @@ def cat():
     resp = requests.get("https://api.thecatapi.com/v1/images/search?size=full")
     return resp.json()[0]["url"]
 
+def dog():
+    """ a random dog photo"""
+    resp = requests.get("https://api.thedogapi.com/v1/images/search?size=full")
+    return resp.json()[0]["url"]
+
 
 @bot.responds_to("hood")
 def hood():
@@ -192,11 +197,11 @@ def bored():
     )
 
     eat_action = random.choice(
-        ["grab a bite", "have a snack", "get some grub", "enjoy the nice food"]
+        ["grab a bite", "have a snack", "get some grub", "enjoy the nice food", "munch on some tasties"]
     )
 
     drink_action = random.choice(
-        ["grab a drink", "smash a few whiteclaws", "have a cold one", "take it easy"]
+        ["grab a drink", "smash a few whiteclaws", "have a cold one", "take it easy", "toss a few dice"]
     )
 
     return " ".join(
@@ -211,7 +216,7 @@ def bored():
 @bot.responds_to("hello")
 def hello():
     """ returns a greeting """
-    return random.choice(["Hola", "Hallo", "Hello", "Salut"])
+    return random.choice(["Hola", "Hallo", "Hello", "Salut", "Ola", "Labas", "Sawubona", "Talofa"])
 
 
 @bot.responds_to("dogfact")
@@ -236,6 +241,8 @@ def trivia():
 
 @bot.responds_to("potato")
 def potato():
+    if random.randint(0,100) < 33:
+        return "tomato"
     return " ".join(["potato" for _ in range(0, random.randint(0, 10))])
 
 
