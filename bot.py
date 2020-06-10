@@ -76,6 +76,7 @@ def cat():
     resp = requests.get("https://api.thecatapi.com/v1/images/search?size=full")
     return resp.json()[0]["url"]
 
+@bot.responds_to("dog")
 def dog():
     """ a random dog photo"""
     resp = requests.get("https://api.thedogapi.com/v1/images/search?size=full")
