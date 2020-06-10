@@ -234,6 +234,11 @@ def trivia():
     return result["question"]
 
 
+@bot.responds_to("potato")
+def potato():
+    return " ".join(["potato" for _ in range(0, random.randint(0, 10))])
+
+
 def main():
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
