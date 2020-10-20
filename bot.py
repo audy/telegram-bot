@@ -140,7 +140,7 @@ def delivery():
     # I guess every restaurant that is open now probably delivers :shrug:
     restaurant = random.choice(
         YELP.search_query(
-            location=first_neighborhood, limit=10, open_now=True, categories="restaurants"
+            location=f"{first_neighborhood}, San Francisco, CA", limit=10, open_now=True, categories="restaurants"
         )["businesses"]
     )
 
@@ -170,7 +170,7 @@ def delivery():
     return " ".join(
         [
             action,
-            f"and order delivery from {restaurant['name']} ({helpers.humanized_list(restaurant_categories)})",
+            f"and order delivery from {restaurant['name']} ({helpers.humanized_list(restaurant_categories)}) in the {first_neighborhood}",
             restaurant["url"].split("?")[0],
         ]
     )
