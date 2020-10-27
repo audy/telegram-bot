@@ -55,7 +55,7 @@ class Bot:
 
     def _handler_wrapper(self, handler_function):
         return lambda update, context: context.bot.send_message(
-            chat_id=update.message.chat_id, text=handler_function()
+            chat_id=update.message.chat_id, text=handler_function(context)
         )
 
     def responds_to(self, trigger):
@@ -71,33 +71,34 @@ bot = Bot()
 
 
 @bot.responds_to("cat")
-def cat():
+def cat(context):
     """ a random cat photo """
     resp = requests.get("https://api.thecatapi.com/v1/images/search?size=full")
     return resp.json()[0]["url"]
 
+
 @bot.responds_to("dog")
-def dog():
+def dog(context):
     """ a random dog photo"""
     resp = requests.get("https://api.thedogapi.com/v1/images/search?size=full")
     return resp.json()[0]["url"]
 
 
 @bot.responds_to("hood")
-def hood():
+def hood(context):
     """ a random neighborhood in SF """
     return random.choice(NEIGHBORHOODS)
 
 
 @bot.responds_to("joke")
-def joke():
+def joke(context):
     """ tell a joke """
     resp = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
     return resp.json()["joke"]
 
 
 @bot.responds_to("weather")
-def weather():
+def weather(context):
     resp = requests.get(f"https://api.darksky.net/forecast/{Keys.get_darksky()}/37.8267,-122.4233")
 
     weather_data = resp.json()
@@ -111,7 +112,7 @@ Forecast: {weather_data['daily']['summary']}
 
 
 @bot.responds_to("bored")
-def rona_bored():
+def rona_bored(context):
     """ replacement for /bored during social-distancing """
     eat_action = random.choice(
         ["grab a bite", "have a snack", "get some grub", "enjoy the nice food"]
@@ -132,15 +133,23 @@ def rona_bored():
     )
 
 
+@bot.responds_to("takeout")
 @bot.responds_to("delivery")
-def delivery():
+def delivery(context):
     """ random food delivery. Useful for #TakeoutTuesday """
-    first_neighborhood = random.choice(NEIGHBORHOODS)
+
+    if len(context.args) == 0:
+        neighborhood = random.choice(NEIGHBORHOODS)
+    else:
+        neighborhood = " ".join(context.args)
 
     # I guess every restaurant that is open now probably delivers :shrug:
     restaurant = random.choice(
         YELP.search_query(
-            location=f"{first_neighborhood}, San Francisco, CA", limit=10, open_now=True, categories="restaurants"
+            location=f"{neighborhood}, San Francisco, CA",
+            limit=10,
+            open_now=True,
+            categories="restaurants",
         )["businesses"]
     )
 
@@ -170,14 +179,14 @@ def delivery():
     return " ".join(
         [
             action,
-            f"and order delivery from {restaurant['name']} ({helpers.humanized_list(restaurant_categories)}) in the {first_neighborhood}",
+            f"and order delivery from {restaurant['name']} ({helpers.humanized_list(restaurant_categories)}) in the {neighborhood}",
             restaurant["url"].split("?")[0],
         ]
     )
 
 
 @bot.responds_to("og_bored")
-def bored():
+def bored(context):
     """ Suggest something to do on a Saturday """
     first_neighborhood = random.choice(NEIGHBORHOODS)
 
@@ -198,11 +207,23 @@ def bored():
     )
 
     eat_action = random.choice(
-        ["grab a bite", "have a snack", "get some grub", "enjoy the nice food", "munch on some tasties"]
+        [
+            "grab a bite",
+            "have a snack",
+            "get some grub",
+            "enjoy the nice food",
+            "munch on some tasties",
+        ]
     )
 
     drink_action = random.choice(
-        ["grab a drink", "smash a few whiteclaws", "have a cold one", "take it easy", "toss a few dice"]
+        [
+            "grab a drink",
+            "smash a few whiteclaws",
+            "have a cold one",
+            "take it easy",
+            "toss a few dice",
+        ]
     )
 
     return " ".join(
@@ -215,18 +236,18 @@ def bored():
 
 
 @bot.responds_to("hello")
-def hello():
+def hello(context):
     """ returns a greeting """
     return random.choice(["Hola", "Hallo", "Hello", "Salut", "Ola", "Labas", "Sawubona", "Talofa"])
 
 
 @bot.responds_to("dogfact")
-def dogfact():
+def dogfact(context):
     return requests.get("http://dog-api.kinduff.com/api/facts").json()["facts"][0]
 
 
 @bot.responds_to("catfact")
-def catfact():
+def catfact(context):
     """
     Get a random cat fact from catfact.jinja
     """
@@ -234,15 +255,15 @@ def catfact():
 
 
 @bot.responds_to("trivia")
-def trivia():
+def trivia(context):
     trivia = requests.get("https://opentdb.com/api.php?amount=1").json()
     result = trivia["results"][0]
     return result["question"]
 
 
 @bot.responds_to("potato")
-def potato():
-    if random.randint(0,100) < 33:
+def potato(context):
+    if random.randint(0, 100) < 33:
         return "tomato"
     return " ".join(["potato" for _ in range(0, random.randint(0, 10))])
 
