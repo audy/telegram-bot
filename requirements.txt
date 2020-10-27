@@ -7,7 +7,7 @@
 certifi==2020.4.5.1       # via python-telegram-bot, requests
 cffi==1.14.0              # via cryptography
 chardet==3.0.4            # via requests
-cryptography==2.9.2       # via python-telegram-bot
+cryptography==3.2         # via python-telegram-bot
 future==0.18.2            # via python-telegram-bot
 idna==2.9                 # via requests
 pycparser==2.20           # via cffi
