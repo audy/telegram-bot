@@ -1,4 +1,3 @@
-Skipping virtualenv creation, as specified in config file.
 alembic==1.4.3
 amqp==5.0.1
 appdirs==1.4.4
