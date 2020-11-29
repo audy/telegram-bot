@@ -264,10 +264,10 @@ def trivia(context):
 @bot.responds_to("potato")
 def potato(context):
 
-    if context.args:
-        word = " ".join(context.args)
-    else:
+    if len(context.args) == 0:
         word = "potato"
+    else:
+        word = " ".join(context.args)
 
     if random.randint(0, 100) < 33:
         return "tomato"
