@@ -13,7 +13,7 @@ To add a command, edit `bot.py` and add a function that returns a string:
 import random
 
 @bot.responds_to("hello")
-def hello():
+def hello(context):
     """ returns a greeting """
     return random.sample(["Hola", "Hallo", "Hello", "Salut"])
 ```
