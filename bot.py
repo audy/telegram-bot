@@ -25,9 +25,6 @@ class Keys:
         return os.environ["DARKSKY_API_KEY"]
 
 
-YELP = YelpAPI(Keys.get_yelp())
-
-
 class Bot:
     def __init__(self):
         self.telegram_api_key = os.environ["TELEGRAM_API_KEY"]
@@ -144,8 +141,9 @@ def delivery(context):
         neighborhood = " ".join(context.args)
 
     # I guess every restaurant that is open now probably delivers :shrug:
+    yelp = YelpAPI(Keys.get_yelp())
     restaurant = random.choice(
-        YELP.search_query(
+        yelp.search_query(
             location=f"{neighborhood}, San Francisco, CA",
             limit=10,
             open_now=True,
@@ -190,8 +188,10 @@ def bored(context):
     """ Suggest something to do on a Saturday """
     first_neighborhood = random.choice(NEIGHBORHOODS)
 
+    yelp = YelpAPI(Keys.get_yelp())
+
     restaurant = random.choice(
-        YELP.search_query(
+        yelp.search_query(
             location=first_neighborhood, limit=10, open_now=True, categories="restaurants"
         )["businesses"]
     )
@@ -201,7 +201,7 @@ def bored(context):
     second_neighborhood = random.choice(NEIGHBORHOODS)
 
     bar = random.choice(
-        YELP.search_query(location=second_neighborhood, limit=10, open_now=True, categories="bars")[
+        yelp.search_query(location=second_neighborhood, limit=10, open_now=True, categories="bars")[
             "businesses"
         ]
     )
