@@ -263,9 +263,15 @@ def trivia(context):
 
 @bot.responds_to("potato")
 def potato(context):
+
+    if context.args:
+        word = " ".join(context.args)
+    else:
+        word = "potato"
+
     if random.randint(0, 100) < 33:
         return "tomato"
-    return " ".join(["potato" for _ in range(0, random.randint(0, 10))])
+    return " ".join([word for _ in range(0, random.randint(0, 10))])
 
 
 def main():
