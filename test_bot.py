@@ -1,16 +1,25 @@
 import pytest
-from bot import Keys
+from bot import potato
+from typing import List
 import os
 
 
-@pytest.fixture(scope="module")
-def keys():
-    os.environ["YELP_API_KEY"] = "yelp-api-key"
-    os.environ["TELEGRAM_API_KEY"] = "telegram-api-key"
-    os.environ["DARKSKY_API_KEY"] = "darksky-api-key"
+class Context:
+    """ Mock of telegram-bot's context """
+
+    args: List[str] = []
 
 
-def test_keys(keys):
-    assert Keys.get_yelp() == "yelp-api-key"
-    assert Keys.get_telegram() == "telegram-api-key"
-    assert Keys.get_darksky() == "darksky-api-key"
+@pytest.fixture
+def context():
+    return Context()
+
+
+def test_potato(context):
+    context.args = ["crab"]
+    assert "crab" in potato(context)
+
+
+def test_potato_no_args(context):
+    result = potato(context)
+    assert "potato" in result or "tomato" in result
