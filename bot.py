@@ -24,16 +24,19 @@ class Keys:
     def get_darksky(_):
         return os.environ["DARKSKY_API_KEY"]
 
+    @classmethod
+    def get_telegram(_):
+        return os.environ["TELEGRAM_API_KEY"]
+
 
 class Bot:
     def __init__(self):
-        self.telegram_api_key = os.environ["TELEGRAM_API_KEY"]
-        self.updater = Updater(token=self.telegram_api_key, use_context=True)
-
         # trigger -> handler function
         self.handlers = {}
 
     def start(self):
+        self.telegram_api_key = Keys.get_telegram()
+        self.updater = Updater(token=self.telegram_api_key, use_context=True)
         self._register_handlers()
         self.updater.start_polling()
 
