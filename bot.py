@@ -40,9 +40,14 @@ class Bot:
         self._register_handlers()
         self.updater.start_polling()
 
-    def help(self):
+    def help(self, context):
         """ auto-generated handler for /help """
-        return " ".join([f"/{k}" for k in self.handlers.keys()])
+        if len(context.args) == 1:
+            return self.handlers[context.args[0]].__doc__
+        elif len(context.args) == 0:
+            return " ".join([f"/{k}" for k in self.handlers.keys()])
+        else:
+            return "usage: /help command (optional)"
 
     def _register_handlers(self):
         self.responds_to("help")(self.help)
@@ -72,27 +77,27 @@ bot = Bot()
 
 @bot.responds_to("cat")
 def cat(context):
-    """ a random cat photo """
+    """Get a random cat photo"""
     resp = requests.get("https://api.thecatapi.com/v1/images/search?size=full")
     return resp.json()[0]["url"]
 
 
 @bot.responds_to("dog")
 def dog(context):
-    """ a random dog photo"""
+    """Get a random dog photo"""
     resp = requests.get("https://api.thedogapi.com/v1/images/search?size=full")
     return resp.json()[0]["url"]
 
 
 @bot.responds_to("hood")
 def hood(context):
-    """ a random neighborhood in SF """
+    """Get a random neighborhood in Sf"""
     return random.choice(NEIGHBORHOODS)
 
 
 @bot.responds_to("joke")
 def joke(context):
-    """ tell a joke """
+    """Tell a random joke"""
     resp = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
     return resp.json()["joke"]
 
@@ -113,7 +118,7 @@ Forecast: {weather_data['daily']['summary']}
 
 @bot.responds_to("bored")
 def rona_bored(context):
-    """ replacement for /bored during social-distancing """
+    """Get a suggestion for an activity to do during shelter-in-place"""
     eat_action = random.choice(
         ["grab a bite", "have a snack", "get some grub", "enjoy the nice food"]
     )
@@ -136,7 +141,7 @@ def rona_bored(context):
 @bot.responds_to("takeout")
 @bot.responds_to("delivery")
 def delivery(context):
-    """ random food delivery. Useful for #TakeoutTuesday """
+    """Get a food delivery or takeout suggestion. Useful for #TakeoutTuesday """
 
     if len(context.args) == 0:
         neighborhood = random.choice(NEIGHBORHOODS)
@@ -188,7 +193,7 @@ def delivery(context):
 
 @bot.responds_to("og_bored")
 def bored(context):
-    """ Suggest something to do on a Saturday """
+    """Get a suggestion for a random activity"""
     first_neighborhood = random.choice(NEIGHBORHOODS)
 
     yelp = YelpAPI(Keys.get_yelp())
@@ -240,25 +245,25 @@ def bored(context):
 
 @bot.responds_to("hello")
 def hello(context):
-    """ returns a greeting """
+    """Be greeted"""
     return random.choice(["Hola", "Hallo", "Hello", "Salut", "Ola", "Labas", "Sawubona", "Talofa"])
 
 
 @bot.responds_to("dogfact")
 def dogfact(context):
+    """Get a random dog fact"""
     return requests.get("http://dog-api.kinduff.com/api/facts").json()["facts"][0]
 
 
 @bot.responds_to("catfact")
 def catfact(context):
-    """
-    Get a random cat fact from catfact.jinja
-    """
+    """Get a random cat fact"""
     return requests.get("https://catfact.ninja/fact").json()["fact"]
 
 
 @bot.responds_to("trivia")
 def trivia(context):
+    """Get a random trivia question"""
     trivia = requests.get("https://opentdb.com/api.php?amount=1").json()
     result = trivia["results"][0]
     return result["question"]
@@ -266,7 +271,7 @@ def trivia(context):
 
 @bot.responds_to("potato")
 def potato(context):
-
+    """Usage: /potato (word)"""
     if len(context.args) > 0:
         word = " ".join(context.args)
     elif random.randint(0, 100) < 33:
