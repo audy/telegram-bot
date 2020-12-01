@@ -294,7 +294,7 @@ def potato(context) -> str:
     else:
         words = ["potato"]
 
-    return " ".join([random.choice(words) for _ in range(1, random.randint(1, 10))])
+    return " ".join([random.choice(words) for _ in range(1, random.randint(4, 20))])
 
 
 def main():
