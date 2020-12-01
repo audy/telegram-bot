@@ -119,13 +119,19 @@ def weather(context) -> str:
     resp = requests.get(f"https://api.darksky.net/forecast/{Keys.get_darksky()}/37.8267,-122.4233")
 
     weather_data = resp.json()
-    # TODO: left pad
-    return f"""
-Currently: {weather_data['minutely']['summary']}
-(Wind={weather_data['currently']['windSpeed']}-mph; Temp={weather_data['currently']['temperature']}-F Humidity={100*weather_data['currently']['humidity']}%)
-Today: {weather_data['hourly']['summary']}
-Forecast: {weather_data['daily']['summary']}
-"""
+
+    return "\n".join(
+        [
+            f"Currently: {weather_data['minutely']['summary']}",
+            (
+                f"(Wind={weather_data['currently']['windSpeed']}-mph; "
+                f"Temp={weather_data['currently']['temperature']}-F "
+                f"Humidity={100*weather_data['currently']['humidity']}%)"
+            ),
+            f"Today: {weather_data['hourly']['summary']}",
+            f"Forecast: {weather_data['daily']['summary']}",
+        ]
+    )
 
 
 @bot.responds_to("bored")
