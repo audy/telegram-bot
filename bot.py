@@ -40,10 +40,14 @@ class Bot:
         self._register_handlers()
         self.updater.start_polling()
 
-    def help(self, context):
+    def help(self, context) -> str:
         """ auto-generated handler for /help """
         if len(context.args) == 1:
-            return self.handlers[context.args[0]].__doc__
+            docstring = self.handlers[context.args[0]].__doc__
+            if docstring:
+                return f"/{context.args[0]}: {docstring.strip()}"
+            else:
+                return "¯\_(ツ)_/¯"
         elif len(context.args) == 0:
             return " ".join([f"/{k}" for k in self.handlers.keys()])
         else:
