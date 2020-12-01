@@ -47,7 +47,7 @@ class Bot:
             if docstring:
                 return f"/{context.args[0]}: {docstring.strip()}"
             else:
-                return "¯\_(ツ)_/¯"
+                return r"¯\_(ツ)_/¯"
         elif len(context.args) == 0:
             return " ".join([f"/{k}" for k in self.handlers.keys()])
         else:
