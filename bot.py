@@ -46,7 +46,8 @@ class Bot:
             if context.args[0] in self.handlers:
                 docstring = self.handlers[context.args[0]].__doc__
                 if docstring:
-                    return f"/{context.args[0]}: {docstring.strip()}"
+                    formatted_docstring = "\n".join([l.strip() for l in docstring.split("\n")])
+                    return f"/{context.args[0]} -  {formatted_docstring}"
                 else:
                     return r"¯\_(ツ)_/¯"
             else:
