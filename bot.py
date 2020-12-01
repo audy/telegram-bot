@@ -288,13 +288,13 @@ def trivia(context) -> str:
 def potato(context) -> str:
     """Usage: /potato (word)"""
     if len(context.args) > 0:
-        word = " ".join(context.args)
+        words = context.args
     elif random.randint(0, 100) < 33:
-        word = "tomato"
+        words = ["tomato"]
     else:
-        word = "potato"
+        words = ["potato"]
 
-    return " ".join([word for _ in range(1, random.randint(1, 10))])
+    return " ".join([random.choice(words) for _ in range(1, random.randint(1, 10))])
 
 
 def main():
