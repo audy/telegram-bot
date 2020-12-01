@@ -1,8 +1,0 @@
-build:
-  docker:
-    bot: Dockerfile
-run:
-  bot:
-    command:
-      - ./bot.py
-    image: bot
