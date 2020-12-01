@@ -43,11 +43,17 @@ class Bot:
     def help(self, context) -> str:
         """ auto-generated handler for /help """
         if len(context.args) == 1:
-            docstring = self.handlers[context.args[0]].__doc__
-            if docstring:
-                return f"/{context.args[0]}: {docstring.strip()}"
+            if context.args[0] in self.handlers:
+                docstring = self.handlers[context.args[0]].__doc__
+                if docstring:
+                    return f"/{context.args[0]}: {docstring.strip()}"
+                else:
+                    return r"¯\_(ツ)_/¯"
             else:
-                return r"¯\_(ツ)_/¯"
+                return (
+                    f"I don't know how to {context.args[0]}. "
+                    "Create an issue and/or pull-request on https://github.com/audy/telegram-bot"
+                )
         elif len(context.args) == 0:
             return " ".join([f"/{k}" for k in self.handlers.keys()])
         else:
