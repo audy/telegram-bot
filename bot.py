@@ -80,34 +80,34 @@ bot = Bot()
 
 
 @bot.responds_to("cat")
-def cat(context):
+def cat(context) -> str:
     """Get a random cat photo"""
     resp = requests.get("https://api.thecatapi.com/v1/images/search?size=full")
     return resp.json()[0]["url"]
 
 
 @bot.responds_to("dog")
-def dog(context):
+def dog(context) -> str:
     """Get a random dog photo"""
     resp = requests.get("https://api.thedogapi.com/v1/images/search?size=full")
     return resp.json()[0]["url"]
 
 
 @bot.responds_to("hood")
-def hood(context):
+def hood(context) -> str:
     """Get a random neighborhood in Sf"""
     return random.choice(NEIGHBORHOODS)
 
 
 @bot.responds_to("joke")
-def joke(context):
+def joke(context) -> str:
     """Tell a random joke"""
     resp = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
     return resp.json()["joke"]
 
 
 @bot.responds_to("weather")
-def weather(context):
+def weather(context) -> str:
     """Get the weater in SF"""
     resp = requests.get(f"https://api.darksky.net/forecast/{Keys.get_darksky()}/37.8267,-122.4233")
 
@@ -122,7 +122,7 @@ Forecast: {weather_data['daily']['summary']}
 
 
 @bot.responds_to("bored")
-def rona_bored(context):
+def rona_bored(context) -> str:
     """Get a suggestion for an activity to do during shelter-in-place"""
     eat_action = random.choice(
         ["grab a bite", "have a snack", "get some grub", "enjoy the nice food"]
@@ -145,8 +145,11 @@ def rona_bored(context):
 
 @bot.responds_to("takeout")
 @bot.responds_to("delivery")
-def delivery(context):
-    """Get a food delivery or takeout suggestion. Useful for #TakeoutTuesday """
+def delivery(context) -> str:
+    """
+    Usage: /delivery or /takeout (location).
+    Get a food delivery or takeout suggestion. Useful for #TakeoutTuesday
+    """
 
     if len(context.args) == 0:
         neighborhood = random.choice(NEIGHBORHOODS)
@@ -197,7 +200,7 @@ def delivery(context):
 
 
 @bot.responds_to("og_bored")
-def bored(context):
+def bored(context) -> str:
     """Get a suggestion for a random activity"""
     first_neighborhood = random.choice(NEIGHBORHOODS)
 
@@ -249,25 +252,25 @@ def bored(context):
 
 
 @bot.responds_to("hello")
-def hello(context):
+def hello(context) -> str:
     """Be greeted"""
     return random.choice(["Hola", "Hallo", "Hello", "Salut", "Ola", "Labas", "Sawubona", "Talofa"])
 
 
 @bot.responds_to("dogfact")
-def dogfact(context):
+def dogfact(context) -> str:
     """Get a random dog fact"""
     return requests.get("http://dog-api.kinduff.com/api/facts").json()["facts"][0]
 
 
 @bot.responds_to("catfact")
-def catfact(context):
+def catfact(context) -> str:
     """Get a random cat fact"""
     return requests.get("https://catfact.ninja/fact").json()["fact"]
 
 
 @bot.responds_to("trivia")
-def trivia(context):
+def trivia(context) -> str:
     """Get a random trivia question"""
     trivia = requests.get("https://opentdb.com/api.php?amount=1").json()
     result = trivia["results"][0]
@@ -275,7 +278,7 @@ def trivia(context):
 
 
 @bot.responds_to("potato")
-def potato(context):
+def potato(context) -> str:
     """Usage: /potato (word)"""
     if len(context.args) > 0:
         word = " ".join(context.args)
