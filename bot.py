@@ -104,6 +104,7 @@ def joke(context):
 
 @bot.responds_to("weather")
 def weather(context):
+    """Get the weater in SF"""
     resp = requests.get(f"https://api.darksky.net/forecast/{Keys.get_darksky()}/37.8267,-122.4233")
 
     weather_data = resp.json()
