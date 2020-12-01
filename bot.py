@@ -52,7 +52,7 @@ class Bot:
                     return r"¯\_(ツ)_/¯"
             else:
                 return (
-                    f"I don't know how to {context.args[0]}. "
+                    f"I don't know how to do /{context.args[0]}. "
                     "Create an issue and/or pull-request on https://github.com/audy/telegram-bot"
                 )
         elif len(context.args) == 0:
