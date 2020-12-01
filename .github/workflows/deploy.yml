@@ -13,6 +13,6 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.0.4 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "fathomless-scrubland-98422"
+          heroku_app_name: "alabama-jackson"
           heroku_email: "harekrishna@gmail.com"
           docker_heroku_process_type: "bot" #OPTIONAL and DEFAULT - "web"
