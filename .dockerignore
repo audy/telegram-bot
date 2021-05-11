@@ -1,5 +1,3 @@
 *
 !*.py
 !requirements.txt
-!session.session
-!pyproject.toml

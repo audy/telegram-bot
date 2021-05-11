@@ -1,15 +1,10 @@
 FROM python:3.9.0
 
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-
-ENV PATH=/root/.poetry/bin:$PATH
-
 WORKDIR /app
 
-ADD pyproject.toml .
+ADD requirements.txt
 
-RUN poetry config virtualenvs.create false \
-  && poetry install --no-interaction
+RUN pip install -r requirements.txt
 
 ADD . /app/
 
