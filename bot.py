@@ -12,6 +12,24 @@ from neighborhoods import NEIGHBORHOODS
 
 import helpers
 
+DRINK_ACTIONS = [
+    "grab a drink",
+    "smash a few whiteclaws",
+    "have a cold one",
+    "take it easy",
+    "toss a few dice",
+]
+
+EAT_ACTIONS = [
+    "grab a bite",
+    "have a snack",
+    "get some grub",
+    "enjoy the nice food",
+    "munch on some tasties",
+]
+
+ROOMS = ["living room", "bedroom", "office", "closet", "garage", "bathroom", "kitchen"]
+
 
 class Keys:
     """ keys for various external services """
@@ -46,7 +64,9 @@ class Bot:
             if context.args[0] in self.handlers:
                 docstring = self.handlers[context.args[0]].__doc__
                 if docstring:
-                    formatted_docstring = "\n".join([l.strip() for l in docstring.split("\n")])
+                    formatted_docstring = "\n".join(
+                        [l.strip() for l in docstring.split("\n")]
+                    )
                     return f"/{context.args[0]} - {formatted_docstring}"
                 else:
                     return r"¯\_(ツ)_/¯"
@@ -76,7 +96,9 @@ class Bot:
 
     def responds_to(self, trigger):
         def wrapper(handler):
-            assert trigger not in self.handlers, f"duplicated trigger! {trigger} -> {handler}"
+            assert (
+                trigger not in self.handlers
+            ), f"duplicated trigger! {trigger} -> {handler}"
             self.handlers[trigger] = handler
             return handler
 
@@ -109,14 +131,18 @@ def hood(context) -> str:
 @bot.responds_to("joke")
 def joke(context) -> str:
     """Tell a random joke"""
-    resp = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
+    resp = requests.get(
+        "https://icanhazdadjoke.com/", headers={"Accept": "application/json"}
+    )
     return resp.json()["joke"]
 
 
 @bot.responds_to("weather")
 def weather(context) -> str:
     """Get the weater in SF"""
-    resp = requests.get(f"https://api.darksky.net/forecast/{Keys.get_darksky()}/37.8267,-122.4233")
+    resp = requests.get(
+        f"https://api.darksky.net/forecast/{Keys.get_darksky()}/37.8267,-122.4233"
+    )
 
     weather_data = resp.json()
 
@@ -134,18 +160,14 @@ def weather(context) -> str:
     )
 
 
-@bot.responds_to("bored")
+@bot.responds_to("quarantine")
 def rona_bored(context) -> str:
     """Get a suggestion for an activity to do during shelter-in-place"""
-    eat_action = random.choice(
-        ["grab a bite", "have a snack", "get some grub", "enjoy the nice food"]
-    )
+    eat_action = random.choice(EAT_ACTIONS)
 
-    rooms = ["living room", "bedroom", "office", "closet", "garage", "bathroom", "kitchen"]
+    rooms = ROOMS
 
-    drink_action = random.choice(
-        ["grab a drink", "smash a few whiteclaws", "have a cold one", "take it easy"]
-    )
+    drink_action = random.choice(DRINK_ACTIONS)
 
     return " ".join(
         [
@@ -212,7 +234,27 @@ def delivery(context) -> str:
     )
 
 
-@bot.responds_to("og_bored")
+@bot.responds_to("imbibe")
+def imbibe(context) -> str:
+    """ Get a random place to drink """
+    if len(context.args) == 0:
+        neighborhood = random.choice(NEIGHBORHOODS)
+    else:
+        neighborhood = " ".join(context.args)
+
+    yelp = YelpAPI(Keys.get_yelp())
+
+    bar = random.choice(
+        yelp.search_query(
+            location=neighborhood, limit=10, open_now=True, categories="bars"
+        )["businesses"]
+    )
+
+    drink_action = random.choice(DRINK_ACTIONS)
+
+    return f"Head on over to {neighborhood} and {drink_action} at {bar['name']}"
+
+@bot.responds_to("bored")
 def bored(context) -> str:
     """Get a suggestion for a random activity"""
     first_neighborhood = random.choice(NEIGHBORHOODS)
@@ -221,7 +263,10 @@ def bored(context) -> str:
 
     restaurant = random.choice(
         yelp.search_query(
-            location=first_neighborhood, limit=10, open_now=True, categories="restaurants"
+            location=first_neighborhood,
+            limit=10,
+            open_now=True,
+            categories="restaurants",
         )["businesses"]
     )
 
@@ -230,30 +275,13 @@ def bored(context) -> str:
     second_neighborhood = random.choice(NEIGHBORHOODS)
 
     bar = random.choice(
-        yelp.search_query(location=second_neighborhood, limit=10, open_now=True, categories="bars")[
-            "businesses"
-        ]
+        yelp.search_query(
+            location=second_neighborhood, limit=10, open_now=True, categories="bars"
+        )["businesses"]
     )
 
-    eat_action = random.choice(
-        [
-            "grab a bite",
-            "have a snack",
-            "get some grub",
-            "enjoy the nice food",
-            "munch on some tasties",
-        ]
-    )
-
-    drink_action = random.choice(
-        [
-            "grab a drink",
-            "smash a few whiteclaws",
-            "have a cold one",
-            "take it easy",
-            "toss a few dice",
-        ]
-    )
+    eat_action = random.choice(EAT_ACTIONS)
+    drink_action = random.choice(DRINK_ACTIONS)
 
     return " ".join(
         [
@@ -267,7 +295,9 @@ def bored(context) -> str:
 @bot.responds_to("hello")
 def hello(context) -> str:
     """Be greeted"""
-    return random.choice(["Hola", "Hallo", "Hello", "Salut", "Ola", "Labas", "Sawubona", "Talofa"])
+    return random.choice(
+        ["Hola", "Hallo", "Hello", "Salut", "Ola", "Labas", "Sawubona", "Talofa"]
+    )
 
 
 @bot.responds_to("dogfact")
@@ -305,7 +335,8 @@ def potato(context) -> str:
 
 def main():
     logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        level=logging.INFO,
     )
 
     print("listening!")
