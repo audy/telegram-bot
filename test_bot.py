@@ -7,7 +7,7 @@ from bot import eval_command, potato
 
 
 class Context:
-    """ Mock of telegram-bot's context """
+    """Mock of telegram-bot's context"""
 
     args: List[str] = []
 
@@ -37,3 +37,9 @@ def test_eval_does_not_compute(context):
     context.args = ["asdfadfadf"]
     result = eval_command(context)
     assert result == "Does not compute 👾💩🔥"
+
+
+def test_eval_strings(context):
+    context.args = ["‘test’'.repeat(5)"]
+    result = eval_command(context)
+    assert result == "testtesttesttesttest"
