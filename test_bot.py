@@ -31,3 +31,9 @@ def test_eval(context):
     context.args = "var x = { result: 5 + 5 }; x.result".split()
     result = eval_command(context)
     assert result == "10"
+
+
+def test_eval_does_not_compute(context):
+    context.args = ["asdfadfadf"]
+    result = eval_command(context)
+    assert result == "Does not compute 👾💩🔥"

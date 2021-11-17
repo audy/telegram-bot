@@ -6,6 +6,7 @@ import random
 
 import requests
 from py_mini_racer import MiniRacer
+from py_mini_racer.py_mini_racer import JSEvalException
 from telegram.ext import CommandHandler, Updater
 from yelpapi import YelpAPI
 
@@ -331,7 +332,10 @@ def eval_command(context) -> str:
 
     ctx = MiniRacer()
 
-    result = ctx.eval(script)
+    try:
+        result = ctx.eval(script)
+    except JSEvalException:
+        result = "Does not compute 👾💩🔥"
 
     return str(result)
 
