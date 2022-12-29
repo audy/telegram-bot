@@ -2,3 +2,4 @@ requests
 yelpapi
 python-telegram-bot
 py-mini-racer
+git+https://github.com/cenkalti/putio.py.git

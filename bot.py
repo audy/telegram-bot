@@ -3,6 +3,7 @@
 import logging
 import os
 import random
+import putiopy
 
 import requests
 from py_mini_racer import MiniRacer
@@ -46,6 +47,10 @@ class Keys:
     @classmethod
     def get_telegram(_):
         return os.environ["TELEGRAM_API_KEY"]
+
+    @classmethod
+    def get_putio(_):
+        return os.environ["PUTIO_API_KEY"]
 
 
 class Bot:
@@ -323,6 +328,29 @@ def eval_command(context) -> str:
         result = "Does not compute 👾💩🔥"
 
     return str(result)
+
+
+def find_torrent(search_query: str) -> dict:
+    req = requests.get("https://apibay.org/q.php", params={"q": search_query})
+    rows = req.json()
+    torrent_info = rows[0]
+    return torrent_info
+
+
+def construct_magnet_link(info_hash: str):
+    return f"magnet:?xt=urn:btih:{info_hash}&tr=udp%3A%2F%2F9.rarbg.to%3A2710%2Fannounce"
+
+
+@bot.responds_to("putio")
+def putio_command(context) -> str:
+    query = " ".join(context.args)
+    torrent = find_torrent(query)
+    magnet_link = construct_magnet_link(torrent["info_hash"])
+    client = putiopy.Client(Keys.get_putio())
+
+    transfer = client.Transfer.add_url(magnet_link)
+
+    return f"Downloading {torrent['name']}"
 
 
 def main():
