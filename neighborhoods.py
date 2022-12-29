@@ -1,4 +1,4 @@
-NEIGHBORHOODS = [
+SF_NEIGHBORHOODS = [
     "Alamo Square",
     "Anza Vista",
     "Ashbury Heights",
@@ -118,4 +118,20 @@ NEIGHBORHOODS = [
     "Westwood Highlands",
     "Westwood Park",
     "Yerba Buena",
+]
+
+EAST_BAY_NEIGHBORHOODS = [
+    "Albany",
+    "Berkeley",
+    "Claremont",
+    "Downtown Berkeley",
+    "Emeryville",
+    "North Berkeley",
+    "North Oakland",
+    "Northwest Berkeley",
+    "Oakland",
+    "Piedmont Avenue",
+    "Rockridge",
+    "Temescal",
+    "Westbrae",
 ]

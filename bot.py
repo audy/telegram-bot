@@ -11,7 +11,7 @@ from telegram.ext import CommandHandler, Updater
 from yelpapi import YelpAPI
 
 import helpers
-from neighborhoods import NEIGHBORHOODS
+from neighborhoods import EAST_BAY_NEIGHBORHOODS as NEIGHBORHOODS
 
 DRINK_ACTIONS = [
     "grab a drink",
@@ -65,9 +65,7 @@ class Bot:
             if context.args[0] in self.handlers:
                 docstring = self.handlers[context.args[0]].__doc__
                 if docstring:
-                    formatted_docstring = "\n".join(
-                        [l.strip() for l in docstring.split("\n")]
-                    )
+                    formatted_docstring = "\n".join([l.strip() for l in docstring.split("\n")])
                     return f"/{context.args[0]} - {formatted_docstring}"
                 else:
                     return r"¯\_(ツ)_/¯"
@@ -97,9 +95,7 @@ class Bot:
 
     def responds_to(self, trigger):
         def wrapper(handler):
-            assert (
-                trigger not in self.handlers
-            ), f"duplicated trigger! {trigger} -> {handler}"
+            assert trigger not in self.handlers, f"duplicated trigger! {trigger} -> {handler}"
             self.handlers[trigger] = handler
             return handler
 
@@ -125,25 +121,21 @@ def dog(context) -> str:
 
 @bot.responds_to("hood")
 def hood(context) -> str:
-    """Get a random neighborhood in Sf"""
+    """Get a random neighborhood in the East Bay"""
     return random.choice(NEIGHBORHOODS)
 
 
 @bot.responds_to("joke")
 def joke(context) -> str:
     """Tell a random joke"""
-    resp = requests.get(
-        "https://icanhazdadjoke.com/", headers={"Accept": "application/json"}
-    )
+    resp = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
     return resp.json()["joke"]
 
 
 @bot.responds_to("weather")
 def weather(context) -> str:
     """Get the weater in SF"""
-    resp = requests.get(
-        f"https://api.darksky.net/forecast/{Keys.get_darksky()}/37.8267,-122.4233"
-    )
+    resp = requests.get(f"https://api.darksky.net/forecast/{Keys.get_darksky()}/37.8267,-122.4233")
 
     weather_data = resp.json()
 
@@ -157,24 +149,6 @@ def weather(context) -> str:
             ),
             f"Today: {weather_data['hourly']['summary']}",
             f"Forecast: {weather_data['daily']['summary']}",
-        ]
-    )
-
-
-@bot.responds_to("quarantine")
-def rona_bored(context) -> str:
-    """Get a suggestion for an activity to do during shelter-in-place"""
-    eat_action = random.choice(EAT_ACTIONS)
-
-    rooms = ROOMS
-
-    drink_action = random.choice(DRINK_ACTIONS)
-
-    return " ".join(
-        [
-            f"First, {helpers.get_movement_action()} {random.choice(rooms)} and",
-            f"{eat_action} at {random.choice(rooms)} (kitchen).",
-            f"Then, {helpers.get_movement_action()} {random.choice(rooms)} and {drink_action} at {random.choice(rooms)}.",
         ]
     )
 
@@ -246,9 +220,9 @@ def imbibe(context) -> str:
     yelp = YelpAPI(Keys.get_yelp())
 
     bar = random.choice(
-        yelp.search_query(
-            location=neighborhood, limit=10, open_now=True, categories="bars"
-        )["businesses"]
+        yelp.search_query(location=neighborhood, limit=10, open_now=True, categories="bars")[
+            "businesses"
+        ]
     )
 
     drink_action = random.choice(DRINK_ACTIONS)
@@ -277,9 +251,9 @@ def bored(context) -> str:
     second_neighborhood = random.choice(NEIGHBORHOODS)
 
     bar = random.choice(
-        yelp.search_query(
-            location=second_neighborhood, limit=10, open_now=True, categories="bars"
-        )["businesses"]
+        yelp.search_query(location=second_neighborhood, limit=10, open_now=True, categories="bars")[
+            "businesses"
+        ]
     )
 
     eat_action = random.choice(EAT_ACTIONS)
@@ -297,9 +271,7 @@ def bored(context) -> str:
 @bot.responds_to("hello")
 def hello(context) -> str:
     """Be greeted"""
-    return random.choice(
-        ["Hola", "Hallo", "Hello", "Salut", "Ola", "Labas", "Sawubona", "Talofa"]
-    )
+    return random.choice(["Hola", "Hallo", "Hello", "Salut", "Ola", "Labas", "Sawubona", "Talofa"])
 
 
 @bot.responds_to("dogfact")
@@ -341,9 +313,7 @@ def eval_command(context) -> str:
     script = " ".join(context.args)
 
     # replace pesky smart quotes -- hopefully they're not intentional!
-    script = (
-        script.replace("“", '"').replace("”", '"').replace("‘", "'").replace("’", "'")
-    )
+    script = script.replace("“", '"').replace("”", '"').replace("‘", "'").replace("’", "'")
 
     ctx = MiniRacer()
 
