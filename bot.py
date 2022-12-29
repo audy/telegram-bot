@@ -10,6 +10,7 @@ from py_mini_racer import MiniRacer
 from py_mini_racer.py_mini_racer import JSEvalException
 from telegram.ext import CommandHandler, Updater
 from yelpapi import YelpAPI
+from typing import Optional, Dict
 
 import helpers
 from neighborhoods import EAST_BAY_NEIGHBORHOODS as NEIGHBORHOODS
@@ -330,27 +331,35 @@ def eval_command(context) -> str:
     return str(result)
 
 
-def find_torrent(search_query: str) -> dict:
+def find_torrent(search_query: str) -> Optional[Dict]:
     req = requests.get("https://apibay.org/q.php", params={"q": search_query})
     rows = req.json()
     torrent_info = rows[0]
-    return torrent_info
+
+    if torrent_info["name"] == "No results returned":
+        return None
+    else:
+        return torrent_info
 
 
 def construct_magnet_link(info_hash: str):
     return f"magnet:?xt=urn:btih:{info_hash}&tr=udp%3A%2F%2F9.rarbg.to%3A2710%2Fannounce"
 
 
-@bot.responds_to("putio")
-def putio_command(context) -> str:
+@bot.responds_to("download")
+def download(context) -> str:
     query = " ".join(context.args)
     torrent = find_torrent(query)
-    magnet_link = construct_magnet_link(torrent["info_hash"])
-    client = putiopy.Client(Keys.get_putio())
 
-    transfer = client.Transfer.add_url(magnet_link)
+    if torrent is None:
+        return f"No results :("
+    else:
+        magnet_link = construct_magnet_link(torrent["info_hash"])
+        client = putiopy.Client(Keys.get_putio())
 
-    return f"Downloading {torrent['name']}"
+        transfer = client.Transfer.add_url(magnet_link)
+
+        return f"Downloading {torrent['name']} seeders={torrent['seeders']}"
 
 
 def main():
