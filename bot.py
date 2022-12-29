@@ -3,14 +3,14 @@
 import logging
 import os
 import random
-import putiopy
+from typing import Dict, Optional
 
+import putiopy
 import requests
 from py_mini_racer import MiniRacer
 from py_mini_racer.py_mini_racer import JSEvalException
 from telegram.ext import CommandHandler, Updater
 from yelpapi import YelpAPI
-from typing import Optional, Dict
 
 import helpers
 from neighborhoods import EAST_BAY_NEIGHBORHOODS as NEIGHBORHOODS
