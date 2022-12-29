@@ -40,6 +40,6 @@ def test_eval_does_not_compute(context):
 
 
 def test_eval_strings(context):
-    context.args = ["‘test’'.repeat(5)"]
+    context.args = ["'test'.repeat(5)"]
     result = eval_command(context)
     assert result == "testtesttesttesttest"
